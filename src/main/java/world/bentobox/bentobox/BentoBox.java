@@ -127,12 +127,15 @@ public class BentoBox extends JavaPlugin {
         // Saving the config now.
         saveConfig();
 
-        // Start Database managers
-        playersManager = new PlayersManager(this);
+        // Load the persistent data database and run some checks
+
         // Check if this plugin is now disabled (due to bad database handling)
         if (!this.isEnabled()) {
             return;
         }
+
+        // Start Database managers
+        playersManager = new PlayersManager(this);
         islandsManager = new IslandsManager(this);
         ranksManager = new RanksManager();
 
