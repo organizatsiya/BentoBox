@@ -65,6 +65,7 @@ public class IslandWorldManager {
      */
     private Map<@NonNull World, @NonNull GameModeAddon> gameModes;
     private final Map<UUID, CompletableFuture<World>> loadingWorlds;
+    private final Map<UUID, @NonNull World> uuidToWorld;
 
     /**
      * Manages worlds registered with BentoBox
@@ -74,6 +75,7 @@ public class IslandWorldManager {
         gameModes = new HashMap<>();
         handler = new Database<>(plugin, Worlds.class);
         loadingWorlds = new HashMap<>();
+        uuidToWorld = new HashMap<>();
     }
 
     public void registerWorldsToMultiverse() {
@@ -167,9 +169,15 @@ public class IslandWorldManager {
                 .anyMatch(gm -> gm.getWorldSettings().getFriendlyName().equalsIgnoreCase(name));
     }
 
-    public void addWorld(World world, GameModeAddon gameMode) {
+    /**
+     * Add world to the list of know worlds
+     * @param world - world
+     * @param gameMode - game mode that it is associate with
+     */
+    public void addWorld(World world, GameModeAddon gameMode, UUID uuid) {
         // Add world to map
         gameModes.put(world, gameMode);
+        uuidToWorld.put(uuid, world);
         plugin.log("Added world " + world.getName() + " (" + world.getDifficulty() + ")");
     }
 
@@ -947,6 +955,14 @@ public class IslandWorldManager {
     }
 
     /**
+     * Get world associated with this player's uuid, if known
+     * @param uuid - player's uuid
+     * @return world or null
+     */
+    public World getWorld(UUID uuid) {
+        return uuidToWorld.get(uuid);
+    }
+    /**
      * Load a user's island and associated world from the database
      * @param uuid - player's UUID
      * @param gm - game mode
@@ -956,11 +972,13 @@ public class IslandWorldManager {
         if (loadingWorlds.containsKey(uuid)) {
             return loadingWorlds.get(uuid);
         }
+        BentoBox.getInstance().logDebug("Unknown world");
         CompletableFuture<World> result = new CompletableFuture<>();
         // Check if the database has this player's world
         if (!handler.objectExists(uuid.toString())) {
             return CompletableFuture.completedFuture(null);
         }
+        BentoBox.getInstance().logDebug("Player's world is known");
         // Save to cache
         loadingWorlds.put(uuid, result);
         Worlds worlds = handler.loadObject(uuid.toString());
@@ -968,15 +986,20 @@ public class IslandWorldManager {
             return CompletableFuture.completedFuture(null);
         }
         String worldName = worlds.getWorlds().get(gm.getDescription().getName());
+        BentoBox.getInstance().logDebug("The world name is " + worldName);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
+                BentoBox.getInstance().logDebug("Loading slimeworld...");
                 SlimeWorld world = plugin.getSwm().loadWorld(plugin.getSlimeLoader(), worldName, false, properties);
                 // Slimeworld loaded
                 Bukkit.getScheduler().runTask(plugin, () -> {
+                    BentoBox.getInstance().logDebug("Slimeworld Generate");
                     // Load bukkit world and next tick, the world will be available
                     plugin.getSwm().generateWorld(world);
+                    BentoBox.getInstance().logDebug("Bukkit get world");
                     World newWorld = Bukkit.getWorld(worldName);
-                    addWorld(newWorld, gm);
+                    addWorld(newWorld, gm, uuid);
+                    BentoBox.getInstance().logDebug("All done");
                     Bukkit.getScheduler().runTask(plugin, () -> result.complete(newWorld));
                 });
             } catch (UnknownWorldException | CorruptedWorldException | NewerFormatException | WorldInUseException
@@ -1010,7 +1033,7 @@ public class IslandWorldManager {
                 plugin.getSwm().generateWorld(world);
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     World newWorld = Bukkit.getWorld(worldName);
-                    addWorld(newWorld, gm);
+                    addWorld(newWorld, gm, uuid);
                     // Save the world name
                     if (worlds != null) {
                         worlds.getWorlds().put(gm.getDescription().getName(), worldName);
@@ -1038,6 +1061,23 @@ public class IslandWorldManager {
         String name = UUID.randomUUID().toString().replace("-", "").substring(0,16);
         if (Bukkit.getWorld(name) != null) return makeName();
         return name;
+    }
+
+    /**
+     * Unloads the world from the server. Should be called when an island is unloaded.
+     * @param uniqueId - players UUID
+     */
+    public void unloadWorld(UUID uniqueId) {
+        // Save world
+        World w = uuidToWorld.get(uniqueId);
+        if (w != null) {
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                boolean result = Bukkit.unloadWorld(w, true);
+                BentoBox.getInstance().logDebug("Unloaded world " + result);
+            });
+        }
+        loadingWorlds.remove(uniqueId);
+        this.uuidToWorld.remove(uniqueId);
     }
 
 }

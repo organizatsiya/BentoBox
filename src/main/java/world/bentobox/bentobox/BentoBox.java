@@ -549,6 +549,6 @@ public class BentoBox extends JavaPlugin {
 
     @Nullable
     public SlimeLoader getSlimeLoader() {
-        return  swm != null ? swm.getLoader("file") : null;
+        return  swm != null ? swm.getLoader("mysql") : null;
     }
 }

@@ -31,6 +31,7 @@ This version is a Proof Of Concept (POC) that uses the Slimeworld Manager.
 * Old Slimeworlds are not deleted
 * A default world (a hub or lobby world) is required for players to appear in after a server restart.
 * Islands are always at 0,0 in any particular world (shouldn't be an issue).
+* No nether or end world support - turn those off in the BSkyBlock config for now.
 
 #### Installation
 

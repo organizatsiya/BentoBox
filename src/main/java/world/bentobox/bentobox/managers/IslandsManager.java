@@ -1043,6 +1043,15 @@ public class IslandsManager {
     }
 
     /**
+     * Unloads the island and associated world.
+     * @param uuid - uuid of player
+     */
+    public void unloadIsland(UUID uuid) {
+        plugin.logDebug("Unloaded island");
+        loadingIslands.remove(uuid);
+        plugin.getIWM().unloadWorld(uuid);
+    }
+    /**
      * Load a user's island and associated world from the database
 
      */

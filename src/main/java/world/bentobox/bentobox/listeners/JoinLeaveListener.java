@@ -259,5 +259,6 @@ public class JoinLeaveListener implements Listener {
         plugin.getIslands().clearRank(RanksManager.COOP_RANK, event.getPlayer().getUniqueId());
         players.save(event.getPlayer().getUniqueId());
         User.removePlayer(event.getPlayer());
+        plugin.getIslands().unloadIsland(event.getPlayer().getUniqueId());
     }
 }
