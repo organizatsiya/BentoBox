@@ -37,6 +37,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
+import com.grinderwolf.swm.api.exceptions.UnknownWorldException;
 
 import io.papermc.lib.PaperLib;
 import world.bentobox.bentobox.BentoBox;
@@ -50,10 +51,8 @@ import world.bentobox.bentobox.api.logs.LogEntry;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.database.objects.IslandDeletion;
 import world.bentobox.bentobox.lists.Flags;
 import world.bentobox.bentobox.managers.island.IslandCache;
-import world.bentobox.bentobox.util.DeleteIslandChunks;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.bentobox.util.teleport.SafeSpotTeleport;
 
@@ -372,7 +371,18 @@ public class IslandsManager {
             removePlayersFromIsland(island);
             // Remove blocks from world
             //new DeleteIslandChunks(plugin, new IslandDeletion(island));
-            // Slimeworld TODO: World out how to delete the world
+            // Slimeworld unload and delete the world
+            try {
+                String worldName = island.getWorld().getName();
+                Bukkit.unloadWorld(worldName, false);
+                plugin.getSlimeLoader().deleteWorld(worldName);
+            } catch (UnknownWorldException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 

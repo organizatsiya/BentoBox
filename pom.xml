@@ -186,9 +186,44 @@
             <id>glaremasters</id>
             <url>https://repo.glaremasters.me/repository/concuncan/</url>
         </repository>
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+
     </repositories>
 
     <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <type>javadoc</type>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Bungeecord API -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.16-R0.2-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.16-R0.2-SNAPSHOT</version>
+            <type>javadoc</type>
+            <scope>provided</scope>
+        </dependency>
         <!-- Spigot NMS. Used for Head Getter. -->
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -196,13 +231,7 @@
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Spigot API -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>${spigot.version}</version>
-            <scope>provided</scope>
-        </dependency>
+
         <!-- Paper API -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>

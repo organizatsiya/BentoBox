@@ -270,6 +270,8 @@ public class User {
     }
 
     public boolean isOnline() {
+        // Slimeworld - check bungee servers
+
         return player != null && player.isOnline();
     }
 

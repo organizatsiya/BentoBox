@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.eclipse.jdt.annotation.Nullable;
 
+import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.events.island.IslandEvent.Reason;
 import world.bentobox.bentobox.api.user.User;
@@ -88,6 +89,7 @@ public class IslandCreateCommand extends CompositeCommand {
 
     private boolean makeIsland(User user, String name) {
         user.sendMessage("commands.island.create.creating-island");
+        // Slimeworld - create a world for this user
         getIWM().createWorld(user.getUniqueId(), this.getAddon()).thenAccept(newWorld -> {
             try {
                 System.out.println("Building island");
@@ -96,8 +98,10 @@ public class IslandCreateCommand extends CompositeCommand {
                 .addon(getAddon())
                 .reason(Reason.CREATE)
                 .name(name)
+                // Slimeworld - pass new world
                 .world(newWorld)
-                .locationStrategy(w -> new Location(w, 0,120,0)) // TODO fix locs
+                // Slimeworld - Define where the island will go in the world
+                .locationStrategy(w -> new Location(w, 0, ((GameModeAddon)getAddon()).getWorldSettings().getIslandHeight(),0))
                 .build();
             } catch (IOException e) {
                 getPlugin().logError("Could not create island for player. " + e.getMessage());

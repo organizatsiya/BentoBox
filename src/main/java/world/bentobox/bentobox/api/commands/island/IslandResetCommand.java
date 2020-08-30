@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.eclipse.jdt.annotation.NonNull;
 
+import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.commands.ConfirmableCommand;
 import world.bentobox.bentobox.api.events.island.IslandEvent;
@@ -140,7 +141,7 @@ public class IslandResetCommand extends ConfirmableCommand {
         // Reset the homes of the player
         getPlayers().clearHomeLocations(getWorld(), user.getUniqueId());
 
-        // Get the old world name
+        // Slimeworld - create a new world
         getIWM().createWorld(user.getUniqueId(), this.getAddon()).thenAccept(newWorld -> {
             // Create new island and then delete the old one
             try {
@@ -149,8 +150,10 @@ public class IslandResetCommand extends ConfirmableCommand {
                         .reason(Reason.RESET)
                         .addon(getAddon())
                         .oldIsland(oldIsland)
+                        // Slimeworld - pass new world
                         .world(newWorld)
-                        .locationStrategy(w -> new Location(w, 0,120,0)) // TODO fix locs
+                        // Slimeworld - Define where the island will go in the world
+                        .locationStrategy(w -> new Location(w, 0, ((GameModeAddon)getAddon()).getWorldSettings().getIslandHeight(),0))
                         .name(name);
                 if (noPaste) builder.noPaste();
                 builder.build();
