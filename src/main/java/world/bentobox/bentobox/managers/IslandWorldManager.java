@@ -152,52 +152,36 @@ public class IslandWorldManager {
         if (world == null) {
             throw new NullPointerException("Gamemode overworld object is null for " + gameMode.getDescription().getName());
         }
-        String friendlyName = settings.getFriendlyName().isEmpty() ? world.getName() : settings.getFriendlyName();
+        // Get world difficulty
+        Difficulty diff = settings.getDifficulty() == null ? Difficulty.NORMAL : settings.getDifficulty();
+        settings.setDifficulty(diff);
+
         // Add worlds to map
-        gameModes.put(world, gameMode);
-        // Call Multiverse
-        registerToMultiverse(world, true);
-        if (settings.isNetherGenerate()) {
-            gameModes.put(gameMode.getNetherWorld(), gameMode);
-            if (settings.isNetherIslands()) {
-                registerToMultiverse(gameMode.getNetherWorld(), true);
+        gameMode.getWorlds().forEach(w -> {
+            gameModes.put(w, gameMode);
+            // Call Multiverse
+            switch (w.getEnvironment()) {
+            case NETHER -> registerToMultiverse(w, settings.isNetherIslands());
+            case THE_END -> registerToMultiverse(w, settings.isEndIslands());
+            default -> registerToMultiverse(w, true);
             }
-        }
-        if (settings.isEndGenerate()) {
-            gameModes.put(gameMode.getEndWorld(), gameMode);
-            if (settings.isEndIslands()) {
-                registerToMultiverse(gameMode.getEndWorld(), true);
-            }
-        }
+            // Set World Difficulty
+            Bukkit.getScheduler().runTask(plugin, () -> w.setDifficulty(diff));
+        });
+        // Notify console
+        String friendlyName = settings.getFriendlyName().isEmpty() ? world.getName() : settings.getFriendlyName();
+        plugin.log("Added world " + friendlyName + " (" + world.getDifficulty() + ")");
 
         // Set default island settings
         plugin.getFlagsManager().getFlags().stream().filter(f -> f.getType().equals(Flag.Type.PROTECTION))
         .forEach(f -> settings.getDefaultIslandFlags().putIfAbsent(f, f.getDefaultRank()));
         plugin.getFlagsManager().getFlags().stream().filter(f -> f.getType().equals(Flag.Type.SETTING))
         .forEach(f -> settings.getDefaultIslandSettings().putIfAbsent(f, f.getDefaultRank()));
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            // Set world difficulty
-            Difficulty diff = settings.getDifficulty();
-            if (diff == null) {
-                diff = Difficulty.NORMAL;
-                settings.setDifficulty(diff);
-            }
-            world.setDifficulty(diff);
-
-            // Handle nether and end difficulty levels
-            if (settings.isNetherGenerate()) {
-                this.getNetherWorld(world).setDifficulty(diff);
-            }
-            if (settings.isEndGenerate()) {
-                this.getEndWorld(world).setDifficulty(diff);
-            }
-            plugin.log("Added world " + friendlyName + " (" + world.getDifficulty() + ")");
-        });
 
     }
 
     /**
-     * Get the settings for this world or sub-worlds (nether, end)
+     * Get the settings for this world or sub-worlds (nether, end, other dimensions)
      *
      * @param world world
      * @return world settings
@@ -220,6 +204,21 @@ public class IslandWorldManager {
                 .filter(gm -> gm.getWorldSettings().getFriendlyName().equalsIgnoreCase(friendlyName))
                 .map(GameModeAddon::getOverWorld).findFirst().orElse(null);
     }
+
+    /**
+     * Get a game mode's overworld
+     * @param world a world
+     * @return overworld of the game mode
+     * @since 1.18.0
+     */
+    public Optional<World> getOverWorld(World world) {
+        if (gameModes.containsKey(world)) {
+            return Optional.of(gameModes.get(world).getOverWorld());
+        }
+        return Optional.empty();
+    }
+
+
 
     /**
      * @return the islandDistance

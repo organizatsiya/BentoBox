@@ -88,7 +88,7 @@ public class GeoMobLimitTab implements Tab, ClickHandler {
         // Apply change to panel
         panel.getInventory().setItem(slot, getPanelItem(c, user).getItem());
         // Save settings
-        plugin.getIWM().getAddon(Util.getWorld(world)).ifPresent(GameModeAddon::saveWorldSettings);
+        plugin.getIWM().getAddon(world).ifPresent(GameModeAddon::saveWorldSettings);
         return true;
     }
 

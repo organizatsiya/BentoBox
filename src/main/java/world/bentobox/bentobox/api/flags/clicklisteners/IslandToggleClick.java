@@ -40,7 +40,7 @@ public class IslandToggleClick implements ClickHandler {
         SettingsTab st = (SettingsTab)tp.getActiveTab();
 
         // Permission prefix
-        String prefix = plugin.getIWM().getPermissionPrefix(Util.getWorld(user.getWorld()));
+        String prefix = plugin.getIWM().getAddon(user.getWorld()).map(gm -> gm.getPermissionPrefix()).orElse("");
         String reqPerm = prefix + "settings." + id;
         String allPerms = prefix + "settings.*";
         if (!user.hasPermission(reqPerm) && !user.hasPermission(allPerms)

@@ -2,7 +2,6 @@ package world.bentobox.bentobox.listeners.flags.clicklisteners;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -11,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.event.inventory.ClickType;
 
 import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.panels.Panel;
@@ -22,7 +22,6 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.lists.Flags;
 import world.bentobox.bentobox.managers.RanksManager;
-import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
@@ -44,8 +43,8 @@ public class CommandRankClickListener implements ClickHandler {
         }
 
         // Check if has permission
-        World w = Objects.requireNonNull(Util.getWorld(panel.getWorld().orElse(user.getWorld())));
-        String prefix = plugin.getIWM().getPermissionPrefix(w);
+        World w = panel.getWorld().orElse(user.getWorld());
+        String prefix = plugin.getIWM().getAddon(w).map(GameModeAddon::getPermissionPrefix).orElse("");
         String reqPerm = prefix + "settings." + Flags.COMMAND_RANKS.getID();
         String allPerms = prefix + "settings.*";
         if (!user.hasPermission(reqPerm) && !user.hasPermission(allPerms)

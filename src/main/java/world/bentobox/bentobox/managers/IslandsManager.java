@@ -866,6 +866,14 @@ public class IslandsManager {
         return getHomeLocation(island, name);
     }
 
+    /**
+     * Used to shift from the old method to the new.
+     * @param world - world
+     * @param uuid UUID of player
+     * @param name name of home
+     * @param island island
+     */
+    @SuppressWarnings("removal")
     private void migrateHomes(@NonNull World world, @NonNull UUID uuid, String name, Island island) {
         Map<Location, Integer> homes = plugin
                 .getPlayers()

@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.event.inventory.ClickType;
 
 import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.panels.Panel;
 import world.bentobox.bentobox.api.panels.PanelItem.ClickHandler;
 import world.bentobox.bentobox.api.panels.builders.TabbedPanelBuilder;
@@ -31,8 +32,7 @@ public class MobLimitClickListener implements ClickHandler {
         }
         World world = panel.getWorld().orElse(user.getWorld());
         IslandWorldManager iwm = BentoBox.getInstance().getIWM();
-        World w = Objects.requireNonNull(Util.getWorld(world));
-        String reqPerm = iwm.getPermissionPrefix(w) + "admin.settings.LIMIT_MOBS";
+        String reqPerm = iwm.getAddon(world).map(GameModeAddon::getPermissionPrefix).orElse("") + "admin.settings.LIMIT_MOBS";
         if (!user.hasPermission(reqPerm)) {
             user.sendMessage("general.errors.no-permission", "[permission]", reqPerm);
             user.getPlayer().playSound(user.getLocation(), Sound.BLOCK_METAL_HIT, 1F, 1F);

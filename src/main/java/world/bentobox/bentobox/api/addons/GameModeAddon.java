@@ -1,6 +1,8 @@
 package world.bentobox.bentobox.api.addons;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -18,6 +20,8 @@ import world.bentobox.bentobox.util.Util;
  * @author tastybento, Poslovitch
  */
 public abstract class GameModeAddon extends Addon {
+
+    private Set<World> allWorlds = new HashSet<>();
 
     protected World islandWorld;
     @Nullable
@@ -40,11 +44,33 @@ public abstract class GameModeAddon extends Addon {
     /**
      * Make the worlds for this GameMode in this method. BentoBox will call it
      * after onLoad() and before onEnable(). Do not register flags in this method.
-     * They ,ust be registered afterwards in onEnable()
-     * {@link #islandWorld} must be created and assigned,
-     * {@link #netherWorld} and {@link #endWorld} are optional and may be null.
+     * They must be registered afterwards in onEnable()
+     * {@link #setIslandWorld(World)} must be called and assigned,
+     * {@link #setNetherWorld(World)} and {@link #setEndWorld(World)} are optional.
+     *
      */
     public abstract void createWorlds();
+
+    public void setIslandWorld(World world) {
+        this.islandWorld = world;
+        addWorld(world);
+    }
+    public void setNetherWorld(World world) {
+        this.netherWorld = world;
+        addWorld(world);
+    }
+    public void setEndWorld(World world) {
+        this.endWorld = world;
+        addWorld(world);
+    }
+
+    public void addWorld(World world) {
+        allWorlds.add(world);
+    }
+
+    public Set<World> getWorlds() {
+        return allWorlds;
+    }
 
     /**
      * @return WorldSettings for this GameMode

@@ -37,7 +37,7 @@ public class WorldToggleClick implements ClickHandler {
             user.sendMessage("general.errors.wrong-world");
             return true;
         }
-        String reqPerm = plugin.getIWM().getPermissionPrefix(Util.getWorld(user.getWorld())) + "admin.world.settings." + id;
+        String reqPerm = plugin.getIWM().getAddon(user.getWorld()).map(gm -> gm.getPermissionPrefix()).orElse("") + "admin.world.settings." + id;
         if (!user.hasPermission(reqPerm)) {
             user.sendMessage("general.errors.no-permission", TextVariables.PERMISSION, reqPerm);
             user.getPlayer().playSound(user.getLocation(), Sound.BLOCK_METAL_HIT, 1F, 1F);
@@ -70,7 +70,7 @@ public class WorldToggleClick implements ClickHandler {
             }
 
             // Save world settings
-            plugin.getIWM().getAddon(Util.getWorld(user.getWorld())).ifPresent(GameModeAddon::saveWorldSettings);
+            plugin.getIWM().getAddon(user.getWorld()).ifPresent(GameModeAddon::saveWorldSettings);
         });
         return true;
     }
