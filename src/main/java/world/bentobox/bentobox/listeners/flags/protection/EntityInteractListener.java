@@ -47,15 +47,6 @@ public class EntityInteractListener extends FlagListener {
                 // Minecart riding
                 this.checkIsland(e, p, l, Flags.MINECART);
             }
-            else if (!ServerCompatibility.getInstance().isVersion(
-                ServerCompatibility.ServerVersion.V1_18,
-                ServerCompatibility.ServerVersion.V1_18_1,
-                ServerCompatibility.ServerVersion.V1_18_2) &&
-                e.getPlayer().isSneaking() && e.getRightClicked() instanceof ChestBoat)
-            {
-                // Access to chest boat since 1.19
-                this.checkIsland(e, p, l, Flags.CHEST);
-            }
             else if (e.getRightClicked() instanceof Boat)
             {
                 // Boat riding
@@ -68,21 +59,6 @@ public class EntityInteractListener extends FlagListener {
             // Check naming and check trading
             this.checkIsland(e, p, l, Flags.TRADING);
 
-            if (e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG))
-            {
-                this.checkIsland(e, p, l, Flags.NAME_TAG);
-            }
-        }
-        else if (!ServerCompatibility.getInstance().isVersion(
-            ServerCompatibility.ServerVersion.V1_18,
-            ServerCompatibility.ServerVersion.V1_18_1,
-            ServerCompatibility.ServerVersion.V1_18_2) &&
-            e.getRightClicked() instanceof Allay)
-        {
-            // Allay item giving/taking
-            this.checkIsland(e, p, l, Flags.ALLAY);
-
-            // Check naming
             if (e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG))
             {
                 this.checkIsland(e, p, l, Flags.NAME_TAG);

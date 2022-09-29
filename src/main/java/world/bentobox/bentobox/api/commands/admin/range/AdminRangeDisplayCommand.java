@@ -72,7 +72,7 @@ public class AdminRangeDisplayCommand extends CompositeCommand {
 
             getIslands().getIslandAt(user.getLocation()).ifPresent(island -> {
                 // Draw the island protected area
-                drawZone(user, Particle.BLOCK_MARKER, Material.BARRIER.createBlockData(), island, island.getProtectionRange());
+                drawZone(user, Particle.BARRIER, Material.BARRIER.createBlockData(), island, island.getProtectionRange());
 
                 // Draw the default protected area if island protected zone is different
                 if (island.getProtectionRange() != getPlugin().getIWM().getIslandProtectionRange(getWorld())) {

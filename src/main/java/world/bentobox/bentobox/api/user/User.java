@@ -619,7 +619,7 @@ public class User implements MetaDataAble {
                     throw new IllegalArgumentException("A non-null ItemStack must be provided when using Particle.ITEM_CRACK as particle.");
                 }
             }
-            case BLOCK_CRACK, BLOCK_DUST, FALLING_DUST, BLOCK_MARKER ->
+            case BLOCK_CRACK, BLOCK_DUST, FALLING_DUST ->
             {
                 if (!(dustOptions instanceof BlockData))
                 {
@@ -638,20 +638,6 @@ public class User implements MetaDataAble {
                 if (!(dustOptions instanceof Vibration))
                 {
                     throw new IllegalArgumentException("A non-null Vibration must be provided when using Particle.VIBRATION as particle.");
-                }
-            }
-            case SCULK_CHARGE ->
-            {
-                if (!(dustOptions instanceof Float))
-                {
-                    throw new IllegalArgumentException("A non-null Float must be provided when using Particle.SCULK_CHARGE as particle.");
-                }
-            }
-            case SHRIEK ->
-            {
-                if (!(dustOptions instanceof Integer))
-                {
-                    throw new IllegalArgumentException("A non-null Integer must be provided when using Particle.SHRIEK as particle.");
                 }
             }
             case LEGACY_BLOCK_CRACK, LEGACY_BLOCK_DUST, LEGACY_FALLING_DUST ->

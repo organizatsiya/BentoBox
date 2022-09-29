@@ -280,32 +280,6 @@ public final class Flags {
         .clickHandler(new CycleClick("CHANGE_SETTINGS", RanksManager.MEMBER_RANK, RanksManager.OWNER_RANK))
         .mode(Flag.Mode.TOP_ROW).build();
 
-    /**
-     * This flag allows choosing which island member group can activate sculk sensors.
-     * TODO: Enums#getIfPresent is used to support 1.18
-     * @since 1.21.0
-     */
-    public static final Flag SCULK_SENSOR = new Flag.Builder("SCULK_SENSOR", Enums.getIfPresent(Material.class, "SCULK_SENSOR").or(Material.BARRIER)).
-        listener(new SculkSensorListener()).
-        type(Type.PROTECTION).
-        defaultSetting(true).
-        defaultRank(RanksManager.MEMBER_RANK).
-        clickHandler(new CycleClick("SCULK_SENSOR", RanksManager.VISITOR_RANK, RanksManager.MEMBER_RANK)).
-        build();
-
-    /**
-     * This flag allows choosing which island member group can activate sculk shrieker.
-     * TODO: Enums#getIfPresent is used to support 1.18
-     * @since 1.21.0
-     */
-    public static final Flag SCULK_SHRIEKER = new Flag.Builder("SCULK_SHRIEKER", Enums.getIfPresent(Material.class, "SCULK_SHRIEKER").or(Material.BARRIER)).
-        listener(new SculkShriekerListener()).
-        type(Type.PROTECTION).
-        defaultSetting(true).
-        defaultRank(RanksManager.MEMBER_RANK).
-        clickHandler(new CycleClick("SCULK_SHRIEKER", RanksManager.VISITOR_RANK, RanksManager.MEMBER_RANK)).
-        build();
-
     /*
      * Settings flags (not protection flags)
      */

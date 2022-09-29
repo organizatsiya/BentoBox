@@ -13,7 +13,6 @@ import org.bukkit.block.Furnace;
 import org.bukkit.block.Hopper;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.ChestBoat;
 import org.bukkit.entity.NPC;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.HopperMinecart;
@@ -53,14 +52,6 @@ public class InventoryListener extends FlagListener
         {
             // Prevent opening animal inventories.
             this.checkIsland(event, player, event.getInventory().getLocation(), Flags.MOUNT_INVENTORY);
-        }
-        else if (!ServerCompatibility.getInstance().isVersion(ServerCompatibility.ServerVersion.V1_18,
-            ServerCompatibility.ServerVersion.V1_18_1,
-            ServerCompatibility.ServerVersion.V1_18_2) &&
-            inventoryHolder instanceof ChestBoat)
-        {
-            // Prevent opening chest inventories
-            this.checkIsland(event, player, event.getInventory().getLocation(), Flags.CHEST);
         }
     }
 
@@ -130,12 +121,6 @@ public class InventoryListener extends FlagListener
         }
         else if (inventoryHolder instanceof StorageMinecart)
         {
-            this.checkIsland(e, player, e.getInventory().getLocation(), Flags.CHEST);
-        }
-        else if (!ServerCompatibility.getInstance().isVersion(ServerCompatibility.ServerVersion.V1_18, ServerCompatibility.ServerVersion.V1_18_1, ServerCompatibility.ServerVersion.V1_18_2) &&
-            inventoryHolder instanceof ChestBoat)
-        {
-            // TODO: 1.19 added chest boat. Remove compatibility check when 1.18 is dropped.
             this.checkIsland(e, player, e.getInventory().getLocation(), Flags.CHEST);
         }
         else if (!(inventoryHolder instanceof Player))

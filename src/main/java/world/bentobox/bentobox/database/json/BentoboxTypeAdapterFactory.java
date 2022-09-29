@@ -17,7 +17,6 @@ import com.google.gson.reflect.TypeToken;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.flags.Flag;
-import world.bentobox.bentobox.database.json.adapters.BiomeTypeAdapter;
 import world.bentobox.bentobox.database.json.adapters.BukkitObjectTypeAdapter;
 import world.bentobox.bentobox.database.json.adapters.EnumTypeAdapter;
 import world.bentobox.bentobox.database.json.adapters.FlagTypeAdapter;
@@ -26,7 +25,6 @@ import world.bentobox.bentobox.database.json.adapters.LocationTypeAdapter;
 import world.bentobox.bentobox.database.json.adapters.PotionEffectTypeAdapter;
 import world.bentobox.bentobox.database.json.adapters.VectorTypeAdapter;
 import world.bentobox.bentobox.database.json.adapters.WorldTypeAdapter;
-import world.bentobox.bentobox.versions.ServerCompatibility;
 
 
 /**
@@ -56,8 +54,6 @@ public class BentoboxTypeAdapterFactory implements TypeAdapterFactory {
         if (Location.class.isAssignableFrom(rawType)) {
             // Use our current location adapter for backward compatibility
             return (TypeAdapter<T>) new LocationTypeAdapter();
-        } else if (Biome.class.isAssignableFrom(rawType)) {
-            return (TypeAdapter<T>) new BiomeTypeAdapter();
         } else if (Enum.class.isAssignableFrom(rawType)) {
             return new EnumTypeAdapter(rawType);
         } else if (ItemStack.class.isAssignableFrom(rawType)) {

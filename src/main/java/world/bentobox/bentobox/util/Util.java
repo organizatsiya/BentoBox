@@ -355,8 +355,7 @@ public class Util {
         else
         {
             return entity instanceof Animals || entity instanceof IronGolem || entity instanceof Snowman ||
-                entity instanceof WaterMob && !(entity instanceof PufferFish) || entity instanceof Bat ||
-                entity instanceof Allay;
+                entity instanceof WaterMob && !(entity instanceof PufferFish) || entity instanceof Bat;
         }
     }
 
